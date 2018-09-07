@@ -1,0 +1,25 @@
+> did you first download and use the pretrained net of an different classification task and use that as a default ?
+Yes, but that did not give me accuracy enough, so now I train from scratch. I had hoped to save having to train the conv layers.
+> also, did you use batch normalization?
+Yes.
+> also, did you try ResNets?
+No.
+> you probably don't care at this point, but all of this would __massively__ decrease training time
+Oh, I care all right :) I'm re-training the net every evening (it's running right now) after adding another batch of training images.
+
+
+
+
+
+Hopper belt to camera belt is just a speed difference that causes the parts to become nicely spread out (at least, you hope so!), the camera stitches together frames to scan the part so a part larger than a frame can be scanned. Once the end of the part is detected it gets fed into the classifier which returns part id, category and color. Depending on what sort is set up a part then gets pushed into one of 7 bins, these periodically are emptied into larger bins and bags.
+
+If necessary a lot can be pushed through the machine twice for instance to sort parts by length or to pick out sets (that last bit works in theory but in practice there are a lot of problems to overcome because of the limited number of bins to deposit into).
+
+As for the hardware, there is a nifty little camera with a macro lens that connects to the USB port (noname Asian stuff), it has a 10x magnifying lens, a pololu servo/gpio to USB card to drive the relays and a Sainsmart 16 port relay board to drive the solenoids for the air valves.
+
+The software is all in python with a generous amount of help from the people who wrote numpy, opencv, keras and theano.
+The error rate is between 3 and 5% depending on how fast I set the machine, there are a number of sources for the errors, obviously classification errors, also sometimes two parts are too close to each other and even if the classifier got them right the airpuff for one pushes the other of the belt as well. To minimize this effect I keep the airpuff super short, on the order of 10 ms, which is about as fast as the solenoids can open and close reliably, but it does mean that if it misses even by a bit there is nothing to be done about it and that part will land in the 'other' bin.
+
+That error rate is still too high but with every run the classification errors go down and that's the main component.
+
+One nasty little problem was that I spaced the puffers too regular in the first iteration which meant that sometimes the parts would line up just so in the order in which they came under the camera so that more than one puffer would be active at once leading to a reduction on pressure and no parts would be pushed off the belt. That was a tricky one!
