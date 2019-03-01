@@ -3,6 +3,7 @@ import sys, os, glob, time
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 import boto3
+import config
 
 AWS_ACCESS = config.key
 AWS_SECRET = config.secret
